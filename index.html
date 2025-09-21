@@ -1,0 +1,2120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#2c3e50">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Main Street Events">
+    <title>Main Street Events - Mobile App</title>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            --primary-color: #232B26;
+            --secondary-color: #7B5E57;
+            --accent-color: #6A1B1A;
+            --gold-accent: #c9a86a;
+            --light-gray: #F6F2E7;
+            --dark-gray: #2c3e50;
+            --text-color: #232B26;
+            --white: #ffffff;
+            --border-color: #7B5E57;
+            --shadow: 0 2px 10px rgba(35,43,38,0.1);
+            --border-radius: 8px;
+            --highlight-color: #c9a86a;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background-color: var(--white);
+            color: var(--text-color);
+            line-height: 1.6;
+            overflow-x: hidden;
+            max-width: 414px;
+            margin: 0 auto;
+            min-height: 100vh;
+            position: relative;
+            box-shadow: 0 0 30px rgba(0,0,0,0.2);
+        }
+        
+        .app-container {
+            max-width: 414px;
+            min-height: 896px;
+            position: relative;
+            padding-bottom: 80px;
+            background: var(--white);
+            margin: 0 auto;
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            color: var(--white);
+            padding: 60px 20px 20px;
+            text-align: center;
+            position: relative;
+            box-shadow: var(--shadow);
+        }
+        
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 44px;
+            background: rgba(0,0,0,0.1);
+            z-index: 1;
+        }
+        
+        .header::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 150px;
+            height: 30px;
+            background: rgba(0,0,0,0.2);
+            border-radius: 0 0 15px 15px;
+            z-index: 2;
+        }
+        
+        .logo-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 10px;
+        }
+        
+        .logo-icon {
+            width: 60px;
+            height: 60px;
+            background: var(--white);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 8px;
+        }
+        
+        .logo-svg {
+            width: 100%;
+            height: 100%;
+        }
+        
+        .app-title {
+            font-size: 24px;
+            font-weight: bold;
+            letter-spacing: 1px;
+            margin-bottom: 5px;
+        }
+        
+        .nav-tabs {
+            display: flex;
+            background: var(--white);
+            border-bottom: 1px solid var(--border-color);
+            overflow-x: auto;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+        
+        .nav-tabs::-webkit-scrollbar {
+            display: none;
+        }
+        
+        .nav-tab {
+            flex: 1;
+            min-width: 80px;
+            padding: 12px 8px;
+            background: none;
+            border: none;
+            color: var(--dark-gray);
+            font-size: 11px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        .nav-tab.active {
+            color: #007AFF;
+            border-bottom: 2px solid #007AFF;
+            background: var(--light-gray);
+        }
+        
+        .nav-tab:active {
+            transform: scale(0.98);
+            background: rgba(0, 122, 255, 0.1);
+        }
+        
+        .content {
+            padding: 20px;
+            max-height: calc(896px - 200px);
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+        
+        .section {
+            display: none;
+        }
+        
+        .section.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .view-toggle {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+            background: var(--light-gray);
+            border-radius: 8px;
+            padding: 4px;
+        }
+        
+        .view-toggle-btn {
+            flex: 1;
+            padding: 10px 16px;
+            background: none;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            color: var(--dark-gray);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        .view-toggle-btn.active {
+            background: var(--white);
+            color: #007AFF;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        
+        .view-toggle-btn:active {
+            transform: scale(0.98);
+        }
+        
+        .vendor-view {
+            display: block;
+        }
+        
+        .map-view {
+            display: none;
+        }
+        
+        .vendor-view.active {
+            display: block;
+        }
+        
+        .map-view.active {
+            display: block;
+        }
+        
+        .vendor-view:not(.active) {
+            display: none;
+        }
+        
+        .map-view:not(.active) {
+            display: none;
+        }
+        
+        .search-filter {
+            margin-bottom: 20px;
+        }
+        
+        .search-box {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            font-size: 16px;
+            margin-bottom: 10px;
+            transition: all 0.2s ease;
+        }
+        
+        .search-box:focus {
+            outline: none;
+            border-color: #007AFF;
+            box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.1);
+        }
+        
+        .search-results-info {
+            font-size: 14px;
+            color: var(--dark-gray);
+            margin-bottom: 15px;
+            padding: 8px 12px;
+            background: var(--light-gray);
+            border-radius: 6px;
+            text-align: center;
+        }
+        
+        .filter-buttons {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        
+        .filter-btn {
+            padding: 8px 12px;
+            background: var(--light-gray);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        .filter-btn.active {
+            background: var(--primary-color);
+            color: var(--white);
+            border-color: var(--primary-color);
+        }
+        
+        .filter-btn:active {
+            transform: scale(0.95);
+        }
+        
+        .vendor-grid {
+            display: grid;
+            gap: 15px;
+        }
+        
+        .vendor-card {
+            background: var(--white);
+            border: none;
+            border-radius: 12px;
+            padding: 16px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+            transition: all 0.2s ease;
+            margin-bottom: 12px;
+            cursor: pointer;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        .vendor-card:active {
+            transform: scale(0.98);
+            box-shadow: 0 1px 5px rgba(0,0,0,0.1);
+        }
+        
+        .vendor-card:hover {
+            box-shadow: 0 4px 15px rgba(0,0,0,0.12);
+            transform: translateY(-2px);
+        }
+        
+        .vendor-name {
+            font-size: 18px;
+            font-weight: bold;
+            color: var(--primary-color);
+            margin-bottom: 5px;
+        }
+        
+        .vendor-category {
+            font-size: 12px;
+            color: var(--dark-gray);
+            background: var(--light-gray);
+            padding: 3px 8px;
+            border-radius: 10px;
+            display: inline-block;
+            margin-bottom: 8px;
+        }
+        
+        .vendor-description {
+            font-size: 14px;
+            margin-bottom: 10px;
+            color: var(--text-color);
+        }
+        
+        .vendor-booth {
+            font-size: 14px;
+            font-weight: bold;
+            color: var(--accent-color);
+        }
+        
+        .floor-btn.active {
+            background: var(--primary-color);
+            color: var(--white);
+            border-color: var(--primary-color);
+        }
+        
+        .booth.highlighted {
+            fill: var(--highlight-color) !important;
+            stroke: var(--accent-color) !important;
+            stroke-width: 3 !important;
+            filter: drop-shadow(0 0 4px rgba(201, 168, 106, 0.6));
+        }
+        
+        .booth-info-card.selected {
+            background: linear-gradient(135deg, #f8f5eb 0%, #f0ead8 100%);
+            border-color: var(--highlight-color);
+        }
+        
+        .booth-number {
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--primary-color);
+            margin-bottom: 8px;
+        }
+        
+        .vendor-info-name {
+            font-size: 20px;
+            font-weight: bold;
+            color: var(--accent-color);
+            margin-bottom: 5px;
+        }
+        
+        .vendor-info-category {
+            background: var(--primary-color);
+            color: var(--white);
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 12px;
+            display: inline-block;
+            margin-bottom: 10px;
+        }
+        
+        .vendor-dates {
+            font-size: 14px;
+            color: var(--secondary-color);
+            background: rgba(123, 94, 87, 0.1);
+            padding: 8px 12px;
+            border-radius: 8px;
+        }
+        
+        .menu-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: var(--primary-color);
+            margin-bottom: 15px;
+            border-bottom: 2px solid var(--gold-accent);
+            padding-bottom: 5px;
+        }
+        
+        .menu-item.featured {
+            border-left: 4px solid var(--gold-accent);
+            background: linear-gradient(90deg, #f8f5eb 0%, var(--white) 100%);
+        }
+        
+        .item-name {
+            font-size: 18px;
+            font-weight: bold;
+            color: var(--primary-color);
+            margin-bottom: 5px;
+        }
+        
+        .item-description {
+            font-size: 14px;
+            color: var(--secondary-color);
+            margin-bottom: 8px;
+        }
+        
+        .item-price {
+            font-size: 16px;
+            font-weight: bold;
+            color: var(--accent-color);
+        }
+        
+        .featured-badge {
+            display: inline-block;
+            background: var(--gold-accent);
+            color: var(--white);
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 10px;
+            font-weight: bold;
+            margin-left: 10px;
+        }
+        
+        .alphabet-link {
+            cursor: pointer;
+            color: var(--primary-color);
+            font-weight: 600;
+            transition: color 0.2s ease;
+            text-decoration: none;
+            padding: 4px 6px;
+            border-radius: 4px;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        .alphabet-link:hover {
+            color: var(--accent-color);
+            background: rgba(106, 27, 26, 0.1);
+        }
+        
+        .alphabet-link.disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+            color: var(--secondary-color);
+        }
+        
+        .form-label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: var(--primary-color);
+        }
+        
+        .form-input:focus {
+            outline: none;
+            border-color: var(--secondary-color);
+            box-shadow: 0 0 0 3px rgba(123, 94, 87, 0.1);
+        }
+        
+        .form-textarea:focus {
+            outline: none;
+            border-color: var(--secondary-color);
+            box-shadow: 0 0 0 3px rgba(123, 94, 87, 0.1);
+        }
+        
+        .form-button {
+            background: var(--secondary-color);
+            color: var(--white);
+            padding: 15px 30px;
+            border: none;
+            border-radius: 12px;
+            font-size: 17px;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            transition: all 0.2s ease;
+            -webkit-appearance: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        .form-button:hover {
+            background: var(--primary-color);
+        }
+        
+        .form-button:active {
+            transform: scale(0.98);
+            background: var(--primary-color);
+        }
+        
+        .social-icon {
+            font-size: 40px;
+            margin-bottom: 10px;
+            color: var(--primary-color);
+        }
+        
+        .about-title {
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--primary-color);
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        
+        .mission-card {
+            background: linear-gradient(135deg, var(--light-gray) 0%, #f0ead8 100%);
+            border-left: 4px solid var(--primary-color);
+            padding: 20px;
+            border-radius: var(--border-radius);
+            margin: 20px 0;
+        }
+        
+        .thank-you-icon {
+            font-size: 80px;
+            color: var(--gold-accent);
+            margin-bottom: 20px;
+        }
+        
+        .thank-you-title {
+            font-size: 28px;
+            font-weight: bold;
+            color: var(--primary-color);
+            margin-bottom: 15px;
+        }
+        
+        .thank-you-message {
+            font-size: 16px;
+            color: var(--secondary-color);
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+        
+        .back-button {
+            background: var(--primary-color);
+            color: var(--white);
+            padding: 12px 24px;
+            border: none;
+            border-radius: var(--border-radius);
+            font-size: 16px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.2s ease;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        .back-button:hover {
+            background: var(--secondary-color);
+            text-decoration: none;
+            color: var(--white);
+        }
+        
+        .floor-selector {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .floor-btn {
+            padding: 10px 20px;
+            background: var(--light-gray);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        .floor-btn.active {
+            background: var(--primary-color);
+            color: var(--white);
+            border-color: var(--primary-color);
+        }
+        
+        .floor-btn:active {
+            transform: scale(0.95);
+        }
+        
+        .floor-map {
+            display: none;
+        }
+        
+        .floor-map.active {
+            display: block;
+        }
+        
+        .map-container {
+            background: var(--white);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            padding: 10px;
+            margin-bottom: 20px;
+            box-shadow: var(--shadow);
+        }
+        
+        .venue-map {
+            width: 100%;
+            height: auto;
+            max-height: 400px;
+        }
+        
+        .booth {
+            cursor: pointer;
+            transition: all 0.2s ease;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        .booth:hover {
+            fill: var(--gold-accent) !important;
+            stroke-width: 2;
+        }
+        
+        .booth.highlighted {
+            fill: var(--highlight-color) !important;
+            stroke: var(--accent-color) !important;
+            stroke-width: 3 !important;
+            filter: drop-shadow(0 0 4px rgba(243, 156, 18, 0.6));
+        }
+        
+        .bar-area {
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .bar-area:hover {
+            opacity: 0.8;
+        }
+        
+        .booth-info-card {
+            background: linear-gradient(135deg, var(--light-gray) 0%, #f8f9fa 100%);
+            border: 2px solid var(--primary-color);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 15px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        
+        .booth-info-card.selected {
+            background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
+            border-color: var(--highlight-color);
+        }
+        
+        .booth-number {
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--primary-color);
+            margin-bottom: 8px;
+        }
+        
+        .vendor-info-name {
+            font-size: 20px;
+            font-weight: bold;
+            color: var(--accent-color);
+            margin-bottom: 5px;
+        }
+        
+        .vendor-info-category {
+            background: var(--primary-color);
+            color: var(--white);
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 12px;
+            display: inline-block;
+            margin-bottom: 10px;
+        }
+        
+        .vendor-info-description {
+            font-size: 16px;
+            color: var(--text-color);
+            margin-bottom: 15px;
+        }
+        
+        .vendor-dates {
+            font-size: 14px;
+            color: var(--dark-gray);
+            background: rgba(52, 73, 94, 0.1);
+            padding: 8px 12px;
+            border-radius: 8px;
+        }
+        
+        .map-legend {
+            background: var(--light-gray);
+            padding: 15px;
+            border-radius: var(--border-radius);
+            margin-bottom: 15px;
+        }
+        
+        .menu-section {
+            margin-bottom: 25px;
+        }
+        
+        .menu-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: var(--primary-color);
+            margin-bottom: 15px;
+            border-bottom: 2px solid var(--gold-accent);
+            padding-bottom: 5px;
+        }
+        
+        .menu-item {
+            background: var(--white);
+            border: none;
+            border-radius: 12px;
+            padding: 16px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+            margin-bottom: 12px;
+        }
+        
+        .menu-item.featured {
+            border-left: 4px solid var(--gold-accent);
+            background: linear-gradient(90deg, #fff9e6 0%, var(--white) 100%);
+        }
+        
+        .item-name {
+            font-size: 18px;
+            font-weight: bold;
+            color: var(--primary-color);
+            margin-bottom: 5px;
+        }
+        
+        .item-description {
+            font-size: 14px;
+            color: var(--dark-gray);
+            margin-bottom: 8px;
+        }
+        
+        .item-price {
+            font-size: 16px;
+            font-weight: bold;
+            color: var(--accent-color);
+        }
+        
+        .featured-badge {
+            display: inline-block;
+            background: var(--gold-accent);
+            color: var(--white);
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 10px;
+            font-weight: bold;
+            margin-left: 10px;
+        }
+        
+        .alphabet-link {
+            cursor: pointer;
+            color: var(--primary-color);
+            font-weight: 600;
+            transition: color 0.2s ease;
+            text-decoration: none;
+            padding: 4px 6px;
+            border-radius: 4px;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        .alphabet-link:hover {
+            color: var(--accent-color);
+            background: rgba(231, 76, 60, 0.1);
+        }
+        
+        .alphabet-link:active {
+            transform: scale(0.95);
+        }
+        
+        .alphabet-link.disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+            color: var(--dark-gray);
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: var(--primary-color);
+        }
+        
+        .form-input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            font-size: 17px;
+            transition: all 0.2s ease;
+        }
+        
+        .form-input:focus {
+            outline: none;
+            border-color: #007AFF;
+            box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.1);
+        }
+        
+        .form-textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            font-size: 17px;
+            min-height: 100px;
+            resize: vertical;
+            transition: all 0.2s ease;
+        }
+        
+        .form-textarea:focus {
+            outline: none;
+            border-color: #007AFF;
+            box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.1);
+        }
+        
+        .form-checkbox {
+            margin-right: 8px;
+        }
+        
+        .form-button {
+            background: #007AFF;
+            color: var(--white);
+            padding: 15px 30px;
+            border: none;
+            border-radius: 12px;
+            font-size: 17px;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            transition: all 0.2s ease;
+            -webkit-appearance: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        .form-button:hover {
+            background: #0056CC;
+        }
+        
+        .form-button:active {
+            transform: scale(0.98);
+            background: #004499;
+        }
+        
+        .social-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 15px;
+        }
+        
+        .social-card {
+            background: var(--white);
+            border: none;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+            text-decoration: none;
+            color: var(--text-color);
+            transition: all 0.2s ease;
+            cursor: pointer;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        .social-card:hover {
+            transform: translateY(-2px);
+            text-decoration: none;
+            color: var(--text-color);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.12);
+        }
+        
+        .social-card:active {
+            transform: scale(0.98);
+            box-shadow: 0 1px 5px rgba(0,0,0,0.1);
+        }
+        
+        .social-icon {
+            font-size: 40px;
+            margin-bottom: 10px;
+            color: var(--primary-color);
+        }
+        
+        .social-name {
+            font-size: 14px;
+            font-weight: bold;
+        }
+        
+        .about-content {
+            line-height: 1.8;
+        }
+        
+        .about-section {
+            margin-bottom: 30px;
+        }
+        
+        .about-title {
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--primary-color);
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        
+        .about-text {
+            font-size: 16px;
+            margin-bottom: 15px;
+            text-align: justify;
+        }
+        
+        .mission-card {
+            background: linear-gradient(135deg, var(--light-gray) 0%, #ecf0f1 100%);
+            border-left: 4px solid var(--primary-color);
+            padding: 20px;
+            border-radius: var(--border-radius);
+            margin: 20px 0;
+        }
+        
+        .thank-you-content {
+            text-align: center;
+            padding: 40px 20px;
+        }
+        
+        .thank-you-icon {
+            font-size: 80px;
+            color: var(--gold-accent);
+            margin-bottom: 20px;
+        }
+        
+        .thank-you-title {
+            font-size: 28px;
+            font-weight: bold;
+            color: var(--primary-color);
+            margin-bottom: 15px;
+        }
+        
+        .thank-you-message {
+            font-size: 16px;
+            color: var(--dark-gray);
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+        
+        .back-button {
+            background: var(--primary-color);
+            color: var(--white);
+            padding: 12px 24px;
+            border: none;
+            border-radius: var(--border-radius);
+            font-size: 16px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.2s ease;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        .back-button:hover {
+            background: var(--secondary-color);
+            text-decoration: none;
+            color: var(--white);
+        }
+        
+        .back-button:active {
+            transform: scale(0.98);
+        }
+        
+        .app-container::after {
+            content: '';
+            position: fixed;
+            bottom: 8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 134px;
+            height: 5px;
+            background: rgba(0,0,0,0.3);
+            border-radius: 3px;
+            z-index: 1000;
+        }
+        
+        @media (max-width: 768px) {
+            .header {
+                padding: 40px 15px 15px;
+            }
+            
+            .app-title {
+                font-size: 20px;
+            }
+            
+            .content {
+                padding: 15px;
+            }
+            
+            .nav-tab {
+                font-size: 11px;
+                padding: 12px 8px;
+            }
+            
+            .vendor-name {
+                font-size: 16px;
+            }
+            
+            .social-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <header class="header">
+            <div class="logo-container">
+                <a href="https://www.mainstreetevents.co/" target="_blank" style="text-decoration: none; color: inherit;">
+                    <div class="logo-icon">
+                        <svg class="logo-svg" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="100" cy="100" r="95" fill="none" stroke="#ffffff" stroke-width="4"/>
+                            <circle cx="100" cy="100" r="85" fill="none" stroke="#ffffff" stroke-width="2"/>
+                            <path id="top-arc" d="M 30 100 A 70 70 0 0 1 170 100" fill="none" stroke="none"/>
+                            <text font-family="serif" font-size="12" font-weight="bold" fill="#ffffff">
+                                <textPath href="#top-arc" startOffset="0%">MAIN STREET EVENTS</textPath>
+                            </text>
+                            <rect x="95" y="140" width="10" height="30" fill="#ffffff"/>
+                            <rect x="98" y="60" width="4" height="85" fill="#ffffff"/>
+                            <rect x="88" y="55" width="24" height="25" rx="3" fill="none" stroke="#ffffff" stroke-width="2"/>
+                            <rect x="90" y="57" width="20" height="3" fill="#ffffff"/>
+                            <rect x="90" y="63" width="20" height="12" fill="none" stroke="#ffffff" stroke-width="1"/>
+                            <rect x="90" y="75" width="20" height="3" fill="#ffffff"/>
+                            <circle cx="75" cy="100" r="8" fill="none" stroke="#ffffff" stroke-width="2"/>
+                            <path d="M 75 92 Q 75 100 75 108" fill="none" stroke="#ffffff" stroke-width="2"/>
+                            <path d="M 67 100 Q 75 100 83 100" fill="none" stroke="#ffffff" stroke-width="2"/>
+                            <circle cx="125" cy="100" r="8" fill="none" stroke="#ffffff" stroke-width="2"/>
+                            <path d="M 125 92 Q 125 100 125 108" fill="none" stroke="#ffffff" stroke-width="2"/>
+                            <path d="M 117 100 Q 125 100 133 100" fill="none" stroke="#ffffff" stroke-width="2"/>
+                            <path d="M 92 78 L 92 85 M 96 78 L 96 85 M 100 78 L 100 85 M 104 78 L 104 85 M 108 78 L 108 85" stroke="#ffffff" stroke-width="1"/>
+                        </svg>
+                    </div>
+                </a>
+            </div>
+            <div class="app-title">DENVER WINTER MARKET</div>
+        </header>
+        
+        <nav class="nav-tabs">
+            <button class="nav-tab active" onclick="showSection('vendors')">Map</button>
+            <button class="nav-tab" onclick="showSection('bar')">Bar Menu</button>
+            <button class="nav-tab" onclick="showSection('sponsors')">Sponsors</button>
+            <button class="nav-tab" onclick="showSection('contact')">Connect</button>
+            <button class="nav-tab" onclick="showSection('about')">About</button>
+        </nav>
+        
+        <main class="content">
+            <section id="vendors" class="section active">
+                <div class="view-toggle">
+                    <button class="view-toggle-btn active" onclick="toggleView('list')">📋 List</button>
+                    <button class="view-toggle-btn" onclick="toggleView('map')">🗺️ Map</button>
+                </div>
+                
+                <div class="vendor-view active" id="listView">
+                    <div class="search-filter">
+                        <input type="text" class="search-box" placeholder="Search vendors..." id="vendorSearch" onkeyup="renderVendors()">
+                        
+                        <div class="search-results-info" id="searchResultsInfo"></div>
+                        
+                        <!-- Filter Dropdowns -->
+                        <div style="display: flex; gap: 10px; margin-bottom: 15px;">
+                            <div style="flex: 1; position: relative;">
+                                <select class="form-input" id="dateFilter" onchange="setDateFilter(this.value)" style="padding: 8px 35px 8px 12px; font-size: 14px; appearance: none; -webkit-appearance: none; -moz-appearance: none; background: white;">
+                                    <option value="all">Filter by date</option>
+                                    <option value="dec5-7">Dec 5-7</option>
+                                    <option value="dec12-14">Dec 12-14</option>
+                                </select>
+                                <div style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); pointer-events: none; color: var(--dark-gray);">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <polygon points="22,3 2,3 10,12.46 10,19 14,21 14,12.46 22,3"/>
+                                    </svg>
+                                </div>
+                            </div>
+                            <div style="flex: 1; position: relative;">
+                                <select class="form-input" id="categoryFilter" onchange="setCategoryFilter(this.value)" style="padding: 8px 35px 8px 12px; font-size: 14px; appearance: none; -webkit-appearance: none; -moz-appearance: none; background: white;">
+                                    <option value="all">Filter by type</option>
+                                    <option value="art & gifts">Art & Gifts</option>
+                                    <option value="bath & body">Bath & Body</option>
+                                    <option value="clothing">Clothing</option>
+                                    <option value="food & beverage">Food & Beverage</option>
+                                    <option value="home decor">Home Decor</option>
+                                    <option value="jewelry & accessories">Jewelry & Accessories</option>
+                                    <option value="pets">Pets</option>
+                                </select>
+                                <div style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); pointer-events: none; color: var(--dark-gray);">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <polygon points="22,3 2,3 10,12.46 10,19 14,21 14,12.46 22,3"/>
+                                    </svg>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Alphabetical Jump Index -->
+                    <div style="margin-bottom: 20px; text-align: center; padding: 10px; background: var(--light-gray); border-radius: var(--border-radius); font-size: 14px;">
+                        <span class="alphabet-link" onclick="jumpToLetter('A')">A</span> | 
+                        <span class="alphabet-link" onclick="jumpToLetter('B')">B</span> | 
+                        <span class="alphabet-link" onclick="jumpToLetter('C')">C</span> | 
+                        <span class="alphabet-link" onclick="jumpToLetter('D')">D</span> | 
+                        <span class="alphabet-link" onclick="jumpToLetter('E')">E</span> | 
+                        <span class="alphabet-link" onclick="jumpToLetter('F')">F</span> | 
+                        <span class="alphabet-link" onclick="jumpToLetter('G')">G</span> | 
+                        <span class="alphabet-link" onclick="jumpToLetter('H')">H</span> | 
+                        <span class="alphabet-link" onclick="jumpToLetter('I')">I</span> | 
+                        <span class="alphabet-link" onclick="jumpToLetter('J')">J</span> | 
+                        <span class="alphabet-link" onclick="jumpToLetter('K')">K</span> | 
+                        <span class="alphabet-link" onclick="jumpToLetter('L')">L</span> | 
+                        <span class="alphabet-link" onclick="jumpToLetter('M')">M</span> | 
+                        <span class="alphabet-link" onclick="jumpToLetter('N')">N</span> | 
+                        <span class="alphabet-link" onclick="jumpToLetter('O')">O</span> | 
+                        <span class="alphabet-link" onclick="jumpToLetter('P')">P</span> | 
+                        <span class="alphabet-link" onclick="jumpToLetter('Q')">Q</span> | 
+                        <span class="alphabet-link" onclick="jumpToLetter('R')">R</span> | 
+                        <span class="alphabet-link" onclick="jumpToLetter('S')">S</span> | 
+                        <span class="alphabet-link" onclick="jumpToLetter('T')">T</span> | 
+                        <span class="alphabet-link" onclick="jumpToLetter('U')">U</span> | 
+                        <span class="alphabet-link" onclick="jumpToLetter('V')">V</span> | 
+                        <span class="alphabet-link" onclick="jumpToLetter('W')">W</span> | 
+                        <span class="alphabet-link" onclick="jumpToLetter('X')">X</span> | 
+                        <span class="alphabet-link" onclick="jumpToLetter('Y')">Y</span> | 
+                        <span class="alphabet-link" onclick="jumpToLetter('Z')">Z</span>
+                    </div>
+                    
+                    <div class="vendor-grid" id="vendorGrid"></div>
+                </div>
+                
+                <div class="map-view" id="mapView">
+                    <div class="floor-selector">
+                        <button class="floor-btn active" onclick="showFloor('1')">Level 1</button>
+                        <button class="floor-btn" onclick="showFloor('2')">Level 2</button>
+                    </div>
+                    
+                    <div id="floor1" class="floor-map active">
+                        <h3 style="text-align: center; margin-bottom: 15px; color: var(--secondary-color);">Level 1 - Booths 101-146</h3>
+                        <div class="map-container">
+                            <svg viewBox="0 0 800 600" class="venue-map" style="width: 100%; height: auto;">
+                                <!-- Level 1 Floor Plan based on your image -->
+                                
+                                <!-- Left column booths 110-117 -->
+                                <rect x="20" y="50" width="60" height="40" fill="var(--light-gray)" stroke="var(--primary-color)" stroke-width="2" class="booth" onclick="showBoothInfo('117', 'Level 1')" data-booth="117"/>
+                                <text x="50" y="75" text-anchor="middle" font-size="14" fill="var(--primary-color)" font-weight="bold">117</text>
+                                
+                                <rect x="20" y="100" width="60" height="40" fill="var(--light-gray)" stroke="var(--primary-color)" stroke-width="2" class="booth" onclick="showBoothInfo('116', 'Level 1')" data-booth="116"/>
+                                <text x="50" y="125" text-anchor="middle" font-size="14" fill="var(--primary-color)" font-weight="bold">116</text>
+                                
+                                <rect x="20" y="150" width="60" height="40" fill="var(--light-gray)" stroke="var(--primary-color)" stroke-width="2" class="booth" onclick="showBoothInfo('115', 'Level 1')" data-booth="115"/>
+                                <text x="50" y="175" text-anchor="middle" font-size="14" fill="var(--primary-color)" font-weight="bold">115</text>
+                                
+                                <rect x="20" y="200" width="60" height="40" fill="var(--light-gray)" stroke="var(--primary-color)" stroke-width="2" class="booth" onclick="showBoothInfo('114', 'Level 1')" data-booth="114"/>
+                                <text x="50" y="225" text-anchor="middle" font-size="14" fill="var(--primary-color)" font-weight="bold">114</text>
+                                
+                                <rect x="20" y="250" width="60" height="40" fill="var(--light-gray)" stroke="var(--primary-color)" stroke-width="2" class="booth" onclick="showBoothInfo('113', 'Level 1')" data-booth="113"/>
+                                <text x="50" y="275" text-anchor="middle" font-size="14" fill="var(--primary-color)" font-weight="bold">113</text>
+                                
+                                <rect x="20" y="300" width="60" height="40" fill="var(--light-gray)" stroke="var(--primary-color)" stroke-width="2" class="booth" onclick="showBoothInfo('112', 'Level 1')" data-booth="112"/>
+                                <text x="50" y="325" text-anchor="middle" font-size="14" fill="var(--primary-color)" font-weight="bold">112</text>
+                                
+                                <rect x="20" y="350" width="60" height="40" fill="var(--light-gray)" stroke="var(--primary-color)" stroke-width="2" class="booth" onclick="showBoothInfo('111', 'Level 1')" data-booth="111"/>
+                                <text x="50" y="375" text-anchor="middle" font-size="14" fill="var(--primary-color)" font-weight="bold">111</text>
+                                
+                                <rect x="20" y="400" width="60" height="40" fill="var(--light-gray)" stroke="var(--primary-color)" stroke-width="2" class="booth" onclick="showBoothInfo('110', 'Level 1')" data-booth="110"/>
+                                <text x="50" y="425" text-anchor="middle" font-size="14" fill="var(--primary-color)" font-weight="bold">110</text>
+                                
+                                <!-- Top row booths 118-119 -->
+                                <rect x="120" y="50" width="50" height="40" fill="var(--light-gray)" stroke="var(--primary-color)" stroke-width="2" class="booth" onclick="showBoothInfo('118', 'Level 1')" data-booth="118"/>
+                                <text x="145" y="75" text-anchor="middle" font-size="14" fill="var(--primary-color)" font-weight="bold">118</text>
+                                
+                                <rect x="180" y="50" width="50" height="40" fill="var(--light-gray)" stroke="var(--primary-color)" stroke-width="2" class="booth" onclick="showBoothInfo('119', 'Level 1')" data-booth="119"/>
+                                <text x="205" y="75" text-anchor="middle" font-size="14" fill="var(--primary-color)" font-weight="bold">119</text>
+                                
+                                <!-- Central island booths 120-127 -->
+                                <rect x="120" y="120" width="50" height="50" fill="var(--light-gray)" stroke="var(--primary-color)" stroke-width="2" class="booth" onclick="showBoothInfo('120', 'Level 1')" data-booth="120"/>
+                                <text x="145" y="150" text-anchor="middle" font-size="14" fill="var(--primary-color)" font-weight="bold">120</text>
+                                
+                                <rect x="180" y="120" width="50" height="50" fill="var(--light-gray)" stroke="var(--primary-color)" stroke-width="2" class="booth" onclick="showBoothInfo('127', 'Level 1')" data-booth="127"/>
+                                <text x="205" y="150" text-anchor="middle" font-size="14" fill="var(--primary-color)" font-weight="bold">127</text>
+                                
+                                <rect x="120" y="180" width="50" height="50" fill="var(--light-gray)" stroke="var(--primary-color)" stroke-width="2" class="booth" onclick="showBoothInfo('121', 'Level 1')" data-booth="121"/>
+                                <text x="145" y="210" text-anchor="middle" font-size="14" fill="var(--primary-color)" font-weight="bold">121</text>
+                                
+                                <rect x="180" y="180" width="50" height="50" fill="var(--light-gray)" stroke="var(--primary-color)" stroke-width="2" class="booth" onclick="showBoothInfo('126', 'Level 1')" data-booth="126"/>
+                                <text x="205" y="210" text-anchor="middle" font-size="14" fill="var(--primary-color)" font-weight="bold">126</text>
+                                
+                                <rect x="120" y="240" width="50" height="50" fill="var(--light-gray)" stroke="var(--primary-color)" stroke-width="2" class="booth" onclick="showBoothInfo('122', 'Level 1')" data-booth="122"/>
+                                <text x="145" y="270" text-anchor="middle" font-size="14" fill="var(--primary-color)" font-weight="bold">122</text>
+                                
+                                <rect x="180" y="240" width="50" height="50" fill="var(--light-gray)" stroke="var(--primary-color)" stroke-width="2" class="booth" onclick="showBoothInfo('125', 'Level 1')" data-booth="125"/>
+                                <text x="205" y="270" text-anchor="middle" font-size="14" fill="var(--primary-color)" font-weight="bold">125</text>
+                                
+                                <rect x="120" y="300" width="50" height="50" fill="var(--light-gray)" stroke="var(--primary-color)" stroke-width="2" class="booth" onclick="showBoothInfo('123', 'Level 1')" data-booth="123"/>
+                                <text x="145" y="330" text-anchor="middle" font-size="14" fill="var(--primary-color)" font-weight="bold">123</text>
+                                
+                                <rect x="180" y="300" width="50" height="50" fill="var(--light-gray)" stroke="var(--primary-color)" stroke-width="2" class="booth" onclick="showBoothInfo('124', 'Level 1')" data-booth="124"/>
+                                <text x="205" y="330" text-anchor="middle" font-size="14" fill="var(--primary-color)" font-weight="bold">124</text>
+                                
+                                <!-- Central booths 128-129 -->
+                                <rect x="280" y="320" width="40" height="40" fill="var(--light-gray)" stroke="var(--primary-color)" stroke-width="2" class="booth" onclick="showBoothInfo('128', 'Level 1')" data-booth="128"/>
+                                <text x="300" y="345" text-anchor="middle" font-size="14" fill="var(--primary-color)" font-weight="bold">128</text>
+                                
+                                <rect x="280" y="370" width="40" height="40" fill="var(--light-gray)" stroke="var(--primary-color)" stroke-width="2" class="booth" onclick="showBoothInfo('129', 'Level 1')" data-booth="129"/>
+                                <text x="300" y="395" text-anchor="middle" font-size="14" fill="var(--primary-color)" font-weight="bold">129</text>
+                                
+                                <!-- Right side booths 130-146 -->
+                                <rect x="350" y="150" width="50" height="40" fill="var(--light-gray)" stroke="var(--primary-color)" stroke-width="2" class="booth" onclick="showBoothInfo('130', 'Level 1')" data-booth="130"/>
+                                <text x="375" y="175" text-anchor="middle" font-size="14" fill="var(--primary-color)" font-weight="bold">130</text>
+                                
+                                <rect x="350" y="200" width="50" height="40" fill="var(--light-gray)" stroke="var(--primary-color)" stroke-width="2" class="booth" onclick="showBoothInfo('131', 'Level 1')" data-booth="131"/>
+                                <text x="375" y="225" text-anchor="middle" font-size="14" fill="var(--primary-color)" font-weight="bold">131</text>
+                                
+                                <rect x="350" y="250" width="50" height="40" fill="var(--light-gray)" stroke="var(--primary-color)" stroke-width="2" class="booth" onclick="showBoothInfo('132', 'Level 1')" data-booth="132"/>
+                                <text x="375" y="275" text-anchor="middle" font-size="14" fill="var(--primary-color)" font-weight="bold">132</text>
+                                
+                                <rect x="350" y="300" width="50" height="40" fill="var(--light-gray)" stroke="var(--primary-color)" stroke-width="2" class="booth" onclick="showBoothInfo('133', 'Level 1')" data-booth="133"/>
+                                <text x="375" y="325" text-anchor="middle" font-size="14" fill="var(--primary-color)" font-weight="bold">133</text>
+                                
+                                <rect x="420" y="200" width="50" height="40" fill="var(--light-gray)" stroke="var(--primary-color)" stroke-width="2" class="booth" onclick="showBoothInfo('134', 'Level 1')" data-booth="134"/>
+                                <text x="445" y="225" text-anchor="middle" font-size="14" fill="var(--primary-color)" font-weight="bold">134</text>
+                                
+                                <rect x="420" y="250" width="50" height="40" fill="var(--light-gray)" stroke="var(--primary-color)" stroke-width="2" class="booth" onclick="showBoothInfo('135', 'Level 1')" data-booth="135"/>
+                                <text x="445" y="275" text-anchor="middle" font-size="14" fill="var(--primary-color)" font-weight="bold">135</text>
+                                
+                                <rect x="420" y="300" width="50" height="40" fill="var(--light-gray)" stroke="var(--primary-color)" stroke-width="2" class="booth" onclick="showBoothInfo('136', 'Level 1')" data-booth="136"/>
+                                <text x="445" y="325" text-anchor="middle" font-size="14" fill="var(--primary-color)" font-weight="bold">136</text>
+                                
+                                <rect x="490" y="200" width="50" height="40" fill="var(--light-gray)" stroke="var(--primary-color)" stroke-width="2" class="booth" onclick="showBoothInfo('137', 'Level 1')" data-booth="137"/>
+                                <text x="515" y="225" text-anchor="middle" font-size="14" fill="var(--primary-color)" font-weight="bold">137</text>
+                                
+                                <rect x="490" y="250" width="50" height="40" fill="var(--light-gray)" stroke="var(--primary-color)" stroke-width="2" class="booth" onclick="showBoothInfo('138', 'Level 1')" data-booth="138"/>
+                                <text x="515" y="275" text-anchor="middle" font-size="14" fill="var(--primary-color)" font-weight="bold">138</text>
+                                
+                                <rect x="490" y="300" width="50" height="40" fill="var(--light-gray)" stroke="var(--primary-color)" stroke-width="2" class="booth" onclick="showBoothInfo('139', 'Level 1')" data-booth="139"/>
+                                <text x="515" y="325" text-anchor="middle" font-size="14" fill="var(--primary-color)" font-weight="bold">139</text>
+                                
+                                <rect x="490" y="350" width="50" height="40" fill="var(--light-gray)" stroke="var(--primary-color)" stroke-width="2" class="booth" onclick="showBoothInfo('140', 'Level 1')" data-booth="140"/>
+                                <text x="515" y="375" text-anchor="middle" font-size="14" fill="var(--primary-color)" font-weight="bold">140</text>
+                                
+                                <rect x="560" y="200" width="50" height="40" fill="var(--light-gray)" stroke="var(--primary-color)" stroke-width="2" class="booth" onclick="showBoothInfo('141', 'Level 1')" data-booth="141"/>
+                                <text x="585" y="225" text-anchor="middle" font-size="14" fill="var(--primary-color)" font-weight="bold">141</text>
+                                
+                                <rect x="560" y="250" width="50" height="40" fill="var(--light-gray)" stroke="var(--primary-color)" stroke-width="2" class="booth" onclick="showBoothInfo('142', 'Level 1')" data-booth="142"/>
+                                <text x="585" y="275" text-anchor="middle" font-size="14" fill="var(--primary-color)" font-weight="bold">142</text>
+                                
+                                <rect x="560" y="300" width="50" height="40" fill="var(--light-gray)" stroke="var(--primary-color)" stroke-width="2" class="booth" onclick="showBoothInfo('143', 'Level 1')" data-booth="143"/>
+                                <text x="585" y="325" text-anchor="middle" font-size="14" fill="var(--primary-color)" font-weight="bold">143</text>
+                                
+                                <rect x="560" y="350" width="50" height="40" fill="var(--light-gray)" stroke="var(--primary-color)" stroke-width="2" class="booth" onclick="showBoothInfo('144', 'Level 1')" data-booth="144"/>
+                                <text x="585" y="375" text-anchor="middle" font-size="14" fill="var(--primary-color)" font-weight="bold">144</text>
+                                
+                                <rect x="630" y="200" width="50" height="40" fill="var(--light-gray)" stroke="var(--primary-color)" stroke-width="2" class="booth" onclick="showBoothInfo('145', 'Level 1')" data-booth="145"/>
+                                <text x="655" y="225" text-anchor="middle" font-size="14" fill="var(--primary-color)" font-weight="bold">145</text>
+                                
+                                <rect x="630" y="150" width="50" height="40" fill="var(--light-gray)" stroke="var(--primary-color)" stroke-width="2" class="booth" onclick="showBoothInfo('146', 'Level 1')" data-booth="146"/>
+                                <text x="655" y="175" text-anchor="middle" font-size="14" fill="var(--primary-color)" font-weight="bold">146</text>
+                                
+                                <!-- Bottom row booths 101-109 -->
+                                <rect x="100" y="520" width="60" height="40" fill="var(--light-gray)" stroke="var(--primary-color)" stroke-width="2" class="booth" onclick="showBoothInfo('101', 'Level 1')" data-booth="101"/>
+                                <text x="130" y="545" text-anchor="middle" font-size="14" fill="var(--primary-color)" font-weight="bold">101</text>
+                                
+                                <rect x="170" y="520" width="60" height="40" fill="var(--light-gray)" stroke="var(--primary-color)" stroke-width="2" class="booth" onclick="showBoothInfo('102', 'Level 1')" data-booth="102"/>
+                                <text x="200" y="545" text-anchor="middle" font-size="14" fill="var(--primary-color)" font-weight="bold">102</text>
+                                
+                                <rect x="240" y="520" width="60" height="40" fill="var(--light-gray)" stroke="var(--primary-color)" stroke-width="2" class="booth" onclick="showBoothInfo('103', 'Level 1')" data-booth="103"/>
+                                <text x="270" y="545" text-anchor="middle" font-size="14" fill="var(--primary-color)" font-weight="bold">103</text>
+                                
+                                <rect x="310" y="520" width="60" height="40" fill="var(--light-gray)" stroke="var(--primary-color)" stroke-width="2" class="booth" onclick="showBoothInfo('104', 'Level 1')" data-booth="104"/>
+                                <text x="340" y="545" text-anchor="middle" font-size="14" fill="var(--primary-color)" font-weight="bold">104</text>
+                                
+                                <rect x="380" y="520" width="60" height="40" fill="var(--light-gray)" stroke="var(--primary-color)" stroke-width="2" class="booth" onclick="showBoothInfo('105', 'Level 1')" data-booth="105"/>
+                                <text x="410" y="545" text-anchor="middle" font-size="14" fill="var(--primary-color)" font-weight="bold">105</text>
+                                
+                                <rect x="450" y="520" width="60" height="40" fill="var(--light-gray)" stroke="var(--primary-color)" stroke-width="2" class="booth" onclick="showBoothInfo('106', 'Level 1')" data-booth="106"/>
+                                <text x="480" y="545" text-anchor="middle" font-size="14" fill="var(--primary-color)" font-weight="bold">106</text>
+                                
+                                <rect x="520" y="520" width="60" height="40" fill="var(--light-gray)" stroke="var(--primary-color)" stroke-width="2" class="booth" onclick="showBoothInfo('107', 'Level 1')" data-booth="107"/>
+                                <text x="550" y="545" text-anchor="middle" font-size="14" fill="var(--primary-color)" font-weight="bold">107</text>
+                                
+                                <rect x="590" y="520" width="60" height="40" fill="var(--light-gray)" stroke="var(--primary-color)" stroke-width="2" class="booth" onclick="showBoothInfo('108', 'Level 1')" data-booth="108"/>
+                                <text x="620" y="545" text-anchor="middle" font-size="14" fill="var(--primary-color)" font-weight="bold">108</text>
+                                
+                                <rect x="660" y="520" width="60" height="40" fill="var(--light-gray)" stroke="var(--primary-color)" stroke-width="2" class="booth" onclick="showBoothInfo('109', 'Level 1')" data-booth="109"/>
+                                <text x="690" y="545" text-anchor="middle" font-size="14" fill="var(--primary-color)" font-weight="bold">109</text>
+                            </svg>
+                        </div>
+                    </div>
+                    
+                    <div id="floor2" class="floor-map">
+                        <h3 style="text-align: center; margin-bottom: 15px; color: var(--secondary-color);">Level 2 - Booths 201-330</h3>
+                        <div class="map-container">
+                            <svg viewBox="0 0 800 600" class="venue-map" style="width: 100%; height: auto;">
+                                <!-- Level 2 Floor Plan based on your image -->
+                                
+                                <!-- Top row 300s booths -->
+                                <rect x="80" y="40" width="50" height="40" fill="var(--light-gray)" stroke="var(--primary-color)" stroke-width="2" class="booth" onclick="showBoothInfo('302', 'Level 2')" data-booth="302"/>
+                                <text x="105" y="65" text-anchor="middle" font-size="14" fill="var(--primary-color)" font-weight="bold">302</text>
+                                
+                                <rect x="140" y="40" width="50" height="40" fill="var(--light-gray)" stroke="var(--primary-color)" stroke-width="2" class="booth" onclick="showBoothInfo('303', 'Level 2')" data-booth="303"/>
+                                <text x="165" y="65" text-anchor="middle" font-size="14" fill="var(--primary-color)" font-weight="bold">303</text>
+                                
+                                <rect x="200" y="40" width="50" height="40" fill="var(--light-gray)" stroke="var(--primary-color)" stroke-width="2" class="booth" onclick="showBoothInfo('304', 'Level 2')" data-booth="304"/>
+                                <text x="225" y="65" text-anchor="middle" font-size="14" fill="var(--primary-color)" font-weight="bold">304</text>
+                                
+                                <rect x="260" y="40" width="50" height="40" fill="var(--light-gray)" stroke="var(--primary-color)" stroke-width="2" class="booth" onclick="showBoothInfo('305', 'Level 2')" data-booth="305"/>
+                                <text x="285" y="65" text-anchor="middle" font-size="14" fill="var(--primary-color)" font-weight="bold">305</text>
+                                
+                                <rect x="320" y="40" width="50" height="40" fill="var(--light-gray)" stroke="var(--primary-color)" stroke-width="2" class="booth" onclick="showBoothInfo('306', 'Level 2')" data-booth="306"/>
+                                <text x="345" y="65" text-anchor="middle" font-size="14" fill="var(--primary-color)" font-weight="bold">306</text>
+                                
+                                <rect x="380" y="40" width="50" height="40" fill="var(--light-gray)" stroke="var(--primary-color)" stroke-width="2" class="booth" onclick="showBoothInfo('307', 'Level 2')" data-booth="307"/>
+                                <text x="405" y="65" text-anchor="middle" font-size="14" fill="var(--primary-color)" font-weight="bold">307</text>
+                                
+                                <rect x="440" y="40" width="50" height="40" fill="var(--light-gray)" stroke="var(--primary-color)" stroke-width="2" class="booth" onclick="showBoothInfo('308', 'Level 2')" data-booth="308"/>
+                                <text x="465" y="65" text-anchor="middle" font-size="14" fill="var(--primary-color)" font-weight="bold">308</text>
+                                
+                                <rect x="500" y="40" width="50" height="40" fill="var(--light-gray)" stroke="var(--primary-color)" stroke-width="2" class="booth" onclick="showBoothInfo('309', 'Level 2')" data-booth="309"/>
+                                <text x="525" y="65" text-anchor="middle" font-size="14" fill="var(--primary-color)" font-weight="bold">309</text>
+                                
+                                <rect x="560" y="40" width="50" height="40" fill="var(--light-gray)" stroke="var(--primary-color)" stroke-width="2" class="booth" onclick="showBoothInfo('310', 'Level 2')" data-booth="310"/>
+                                <text x="585" y="65" text-anchor="middle" font-size="14" fill="var(--primary-color)" font-weight="bold">310</text>
+                                
+                                <rect x="620" y="40" width="50" height="40" fill="var(--light-gray)" stroke="var(--primary-color)" stroke-width="2" class="booth" onclick="showBoothInfo('311', 'Level 2')" data-booth="311"/>
+                                <text x="645" y="65" text-anchor="middle" font-size="14" fill="var(--primary-color)" font-weight="bold">311</text>
+                                
+                                <!-- 301 booth -->
+                                <rect x="80" y="100" width="50" height="50" fill="var(--light-gray)" stroke="var(--primary-color)" stroke-width="2" class="booth" onclick="showBoothInfo('301', 'Level 2')" data-booth="301"/>
+                                <text x="105" y="130" text-anchor="middle" font-size="14" fill="var(--primary-color)" font-weight="bold">301</text>
+                                
+                                <!-- Second row 312-320 -->
+                                <rect x="140" y="100" width="50" height="40" fill="var(--light-gray)" stroke="var(--primary-color)" stroke-width="2" class="booth" onclick="showBoothInfo('312', 'Level 2')" data-booth="312"/>
+                                <text x="165" y="125" text-anchor="middle" font-size="14" fill="var(--primary-color)" font-weight="bold">312</text>
+                                
+                                <rect x="200" y="100" width="50" height="40" fill="var(--light-gray)" stroke="var(--primary-color)" stroke-width="2" class="booth" onclick="showBoothInfo('313', 'Level 2')" data-booth="313"/>
+                                <text x="225" y="125" text-anchor="middle" font-size="14" fill="var(--primary-color)" font-weight="bold">313</text>
+                                
+                                <rect x="260" y="100" width="50" height="40" fill="var(--light-gray)" stroke="var(--primary-color)" stroke-width="2" class="booth" onclick="showBoothInfo('314', 'Level 2')" data-booth="314"/>
+                                <text x="285" y="125" text-anchor="middle" font-size="14" fill="var(--primary-color)" font-weight="bold">314</text>
+                                
+                                <rect x="320" y="100" width="50" height="40" fill="var(--light-gray)" stroke="var(--primary-color)" stroke-width="2" class="booth" onclick="showBoothInfo('315', 'Level 2')" data-booth="315"/>
+                                <text x="345" y="125" text-anchor="middle" font-size="14" fill="var(--primary-color)" font-weight="bold">315</text>
+                                
+                                <rect x="380" y="100" width="50" height="40" fill="var(--light-gray)" stroke="var(--primary-color)" stroke-width="2" class="booth" onclick="showBoothInfo('316', 'Level 2')" data-booth="316"/>
+                                <text x="405" y="125" text-anchor="middle" font-size="14" fill="var(--primary-color)" font-weight="bold">316</text>
+                                
+                                <rect x="440" y="100" width="50" height="40" fill="var(--light-gray)" stroke="var(--primary-color)" stroke-width="2" class="booth" onclick="showBoothInfo('317', 'Level 2')" data-booth="317"/>
+                                <text x="465" y="125" text-anchor="middle" font-size="14" fill="var(--primary-color)" font-weight="bold">317</text>
+                                
+                                <rect x="500" y="100" width="50" height="40" fill="var(--light-gray)" stroke="var(--primary-color)" stroke-width="2" class="booth" onclick="showBoothInfo('318', 'Level 2')" data-booth="318"/>
+                                <text x="525" y="125" text-anchor="middle" font-size="14" fill="var(--primary-color)" font-weight="bold">318</text>
+                                
+                                <rect x="560" y="100" width="50" height="40" fill="var(--light-gray)" stroke="var(--primary-color)" stroke-width="2" class="booth" onclick="showBoothInfo('319', 'Level 2')" data-booth="319"/>
+                                <text x="585" y="125" text-anchor="middle" font-size="14" fill="var(--primary-color)" font-weight="bold">319</text>
+                                
+                                <rect x="620" y="100" width="50" height="40" fill="var(--light-gray)" stroke="var(--primary-color)" stroke-width="2" class="booth" onclick="showBoothInfo('320', 'Level 2')" data-booth="320"/>
+                                <text x="645" y="125" text-anchor="middle" font-size="14" fill="var(--primary-color)" font-weight="bold">320</text>
+                                
+                                <!-- Main Bar -->
+                                <rect x="80" y="300" width="80" height="60" fill="var(--accent-color)" stroke="var(--primary-color)" stroke-width="3" class="bar-area"/>
+                                <text x="120" y="335" text-anchor="middle" font-size="16" fill="white" font-weight="bold">MAIN BAR</text>
+                                
+                                <!-- Central booths 321-323 -->
+                                <rect x="280" y="250" width="50" height="40" fill="var(--light-gray)" stroke="var(--primary-color)" stroke-width="2" class="booth" onclick="showBoothInfo('321', 'Level 2')" data-booth="321"/>
+                                <text x="305" y="275" text-anchor="middle" font-size="14" fill="var(--primary-color)" font-weight="bold">321</text>
+                                
+                                <rect x="340" y="250" width="50" height="40" fill="var(--light-gray)" stroke="var(--primary-color)" stroke-width="2" class="booth" onclick="showBoothInfo('322', 'Level 2')" data-booth="322"/>
+                                <text x="365" y="275" text-anchor="middle" font-size="14" fill="var(--primary-color)" font-weight="bold">322</text>
+                                
+                                <rect x="400" y="250" width="50" height="40" fill="var(--light-gray)" stroke="var(--primary-color)" stroke-width="2" class="booth" onclick="showBoothInfo('323', 'Level 2')" data-booth="323"/>
+                                <text x="425" y="275" text-anchor="middle" font-size="14" fill="var(--primary-color)" font-weight="bold">323</text>
+                                
+                                <!-- Satellite Bar -->
+                                <rect x="500" y="220" width="60" height="40" fill="var(--gold-accent)" stroke="var(--primary-color)" stroke-width="3" class="bar-area"/>
+                                <text x="530" y="245" text-anchor="middle" font-size="12" fill="white" font-weight="bold">SATELLITE BAR</text>
+                                
+                                <!-- Right side booths 329-330 -->
+                                <rect x="700" y="250" width="50" height="40" fill="var(--light-gray)" stroke="var(--primary-color)" stroke-width="2" class="booth" onclick="showBoothInfo('329', 'Level 2')" data-booth="329"/>
+                                <text x="725" y="275" text-anchor="middle" font-size="14" fill="var(--primary-color)" font-weight="bold">329</text>
+                                
+                                <rect x="700" y="300" width="50" height="40" fill="var(--light-gray)" stroke="var(--primary-color)" stroke-width="2" class="booth" onclick="showBoothInfo('330', 'Level 2')" data-booth="330"/>
+                                <text x="725" y="325" text-anchor="middle" font-size="14" fill="var(--primary-color)" font-weight="bold">330</text>
+                                
+                                <!-- Lower central booths 324-328 -->
+                                <rect x="200" y="320" width="50" height="40" fill="var(--light-gray)" stroke="var(--primary-color)" stroke-width="2" class="booth" onclick="showBoothInfo('324', 'Level 2')" data-booth="324"/>
+                                <text x="225" y="345" text-anchor="middle" font-size="14" fill="var(--primary-color)" font-weight="bold">324</text>
+                                
+                                <rect x="260" y="320" width="50" height="40" fill="var(--light-gray)" stroke="var(--primary-color)" stroke-width="2" class="booth" onclick="showBoothInfo('325', 'Level 2')" data-booth="325"/>
+                                <text x="285" y="345" text-anchor="middle" font-size="14" fill="var(--primary-color)" font-weight="bold">325</text>
+                                
+                                <rect x="320" y="320" width="50" height="40" fill="var(--light-gray)" stroke="var(--primary-color)" stroke-width="2" class="booth" onclick="showBoothInfo('326', 'Level 2')" data-booth="326"/>
+                                <text x="345" y="345" text-anchor="middle" font-size="14" fill="var(--primary-color)" font-weight="bold">326</text>
+                                
+                                <rect x="380" y="320" width="50" height="40" fill="var(--light-gray)" stroke="var(--primary-color)" stroke-width="2" class="booth" onclick="showBoothInfo('327', 'Level 2')" data-booth="327"/>
+                                <text x="405" y="345" text-anchor="middle" font-size="14" fill="var(--primary-color)" font-weight="bold">327</text>
+                                
+                                <rect x="440" y="320" width="50" height="40" fill="var(--light-gray)" stroke="var(--primary-color)" stroke-width="2" class="booth" onclick="showBoothInfo('328', 'Level 2')" data-booth="328"/>
+                                <text x="465" y="345" text-anchor="middle" font-size="14" fill="var(--primary-color)" font-weight="bold">328</text>
+                                
+                                <!-- Left side booth 216-217 -->
+                                <rect x="140" y="400" width="50" height="40" fill="var(--light-gray)" stroke="var(--primary-color)" stroke-width="2" class="booth" onclick="showBoothInfo('216', 'Level 2')" data-booth="216"/>
+                                <text x="165" y="425" text-anchor="middle" font-size="14" fill="var(--primary-color)" font-weight="bold">216</text>
+                                
+                                <rect x="140" y="450" width="50" height="40" fill="var(--light-gray)" stroke="var(--primary-color)" stroke-width="2" class="booth" onclick="showBoothInfo('217', 'Level 2')" data-booth="217"/>
+                                <text x="165" y="475" text-anchor="middle" font-size="14" fill="var(--primary-color)" font-weight="bold">217</text>
+                                
+                                <!-- Central lower row 207-215 -->
+                                <rect x="280" y="400" width="50" height="40" fill="var(--light-gray)" stroke="var(--primary-color)" stroke-width="2" class="booth" onclick="showBoothInfo('207', 'Level 2')" data-booth="207"/>
+                                <text x="305" y="425" text-anchor="middle" font-size="14" fill="var(--primary-color)" font-weight="bold">207</text>
+                                
+                                <rect x="340" y="400" width="50" height="40" fill="var(--light-gray)" stroke="var(--primary-color)" stroke-width="2" class="booth" onclick="showBoothInfo('208', 'Level 2')" data-booth="208"/>
+                                <text x="365" y="425" text-anchor="middle" font-size="14" fill="var(--primary-color)" font-weight="bold">208</text>
+                                
+                                <rect x="400" y="400" width="50" height="40" fill="var(--light-gray)" stroke="var(--primary-color)" stroke-width="2" class="booth" onclick="showBoothInfo('209', 'Level 2')" data-booth="209"/>
+                                <text x="425" y="425" text-anchor="middle" font-size="14" fill="var(--primary-color)" font-weight="bold">209</text>
+                                
+                                <rect x="460" y="400" width="50" height="40" fill="var(--light-gray)" stroke="var(--primary-color)" stroke-width="2" class="booth" onclick="showBoothInfo('210', 'Level 2')" data-booth="210"/>
+                                <text x="485" y="425" text-anchor="middle" font-size="14" fill="var(--primary-color)" font-weight="bold">210</text>
+                                
+                                <rect x="280" y="450" width="50" height="40" fill="var(--light-gray)" stroke="var(--primary-color)" stroke-width="2" class="booth" onclick="showBoothInfo('215', 'Level 2')" data-booth="215"/>
+                                <text x="305" y="475" text-anchor="middle" font-size="14" fill="var(--primary-color)" font-weight="bold">215</text>
+                                
+                                <rect x="340" y="450" width="50" height="40" fill="var(--light-gray)" stroke="var(--primary-color)" stroke-width="2" class="booth" onclick="showBoothInfo('214', 'Level 2')" data-booth="214"/>
+                                <text x="365" y="475" text-anchor="middle" font-size="14" fill="var(--primary-color)" font-weight="bold">214</text>
+                                
+                                <rect x="400" y="450" width="50" height="40" fill="var(--light-gray)" stroke="var(--primary-color)" stroke-width="2" class="booth" onclick="showBoothInfo('213', 'Level 2')" data-booth="213"/>
+                                <text x="425" y="475" text-anchor="middle" font-size="14" fill="var(--primary-color)" font-weight="bold">213</text>
+                                
+                                <rect x="460" y="450" width="50" height="40" fill="var(--light-gray)" stroke="var(--primary-color)" stroke-width="2" class="booth" onclick="showBoothInfo('212', 'Level 2')" data-booth="212"/>
+                                <text x="485" y="475" text-anchor="middle" font-size="14" fill="var(--primary-color)" font-weight="bold">212</text>
+                                
+                                <rect x="520" y="450" width="50" height="40" fill="var(--light-gray)" stroke="var(--primary-color)" stroke-width="2" class="booth" onclick="showBoothInfo('211', 'Level 2')" data-booth="211"/>
+                                <text x="545" y="475" text-anchor="middle" font-size="14" fill="var(--primary-color)" font-weight="bold">211</text>
+                                
+                                <!-- Bottom row 201-206 -->
+                                <rect x="580" y="520" width="50" height="40" fill="var(--light-gray)" stroke="var(--primary-color)" stroke-width="2" class="booth" onclick="showBoothInfo('201', 'Level 2')" data-booth="201"/>
+                                <text x="605" y="545" text-anchor="middle" font-size="14" fill="var(--primary-color)" font-weight="bold">201</text>
+                                
+                                <rect x="520" y="520" width="50" height="40" fill="var(--light-gray)" stroke="var(--primary-color)" stroke-width="2" class="booth" onclick="showBoothInfo('202', 'Level 2')" data-booth="202"/>
+                                <text x="545" y="545" text-anchor="middle" font-size="14" fill="var(--primary-color)" font-weight="bold">202</text>
+                                
+                                <rect x="460" y="520" width="50" height="40" fill="var(--light-gray)" stroke="var(--primary-color)" stroke-width="2" class="booth" onclick="showBoothInfo('203', 'Level 2')" data-booth="203"/>
+                                <text x="485" y="545" text-anchor="middle" font-size="14" fill="var(--primary-color)" font-weight="bold">203</text>
+                                
+                                <rect x="400" y="520" width="50" height="40" fill="var(--light-gray)" stroke="var(--primary-color)" stroke-width="2" class="booth" onclick="showBoothInfo('204', 'Level 2')" data-booth="204"/>
+                                <text x="425" y="545" text-anchor="middle" font-size="14" fill="var(--primary-color)" font-weight="bold">204</text>
+                                
+                                <rect x="340" y="520" width="50" height="40" fill="var(--light-gray)" stroke="var(--primary-color)" stroke-width="2" class="booth" onclick="showBoothInfo('205', 'Level 2')" data-booth="205"/>
+                                <text x="365" y="545" text-anchor="middle" font-size="14" fill="var(--primary-color)" font-weight="bold">205</text>
+                                
+                                <rect x="280" y="520" width="50" height="40" fill="var(--light-gray)" stroke="var(--primary-color)" stroke-width="2" class="booth" onclick="showBoothInfo('206', 'Level 2')" data-booth="206"/>
+                                <text x="305" y="545" text-anchor="middle" font-size="14" fill="var(--primary-color)" font-weight="bold">206</text>
+                            </svg>
+                        </div>
+                    </div>
+                    
+                    <div id="boothInfo" class="booth-info-card">
+                        <div style="text-align: center; color: var(--primary-color); font-weight: bold; min-height: 60px; display: flex; align-items: center; justify-content: center;">
+                            Select a booth to see vendor details
+                        </div>
+                    </div>
+                    
+                    <div class="map-legend">
+                        <h4 style="color: var(--primary-color); margin-bottom: 10px;">Map Legend:</h4>
+                        <div style="display: flex; flex-wrap: wrap; gap: 15px; font-size: 14px;">
+                            <div style="display: flex; align-items: center; gap: 5px;">
+                                <div style="width: 15px; height: 15px; background: var(--light-gray); border: 1px solid var(--primary-color);"></div>
+                                <span>Vendor Booth</span>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 5px;">
+                                <div style="width: 15px; height: 15px; background: var(--accent-color); border: 1px solid var(--primary-color);"></div>
+                                <span>Main Bar</span>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 5px;">
+                                <div style="width: 15px; height: 15px; background: var(--gold-accent); border: 1px solid var(--primary-color);"></div>
+                                <span>Satellite Bar</span>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 5px;">
+                                <div style="width: 15px; height: 15px; background: var(--highlight-color); border: 1px solid var(--accent-color);"></div>
+                                <span>Selected Booth</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <section id="bar" class="section">
+                <div class="menu-section">
+                    <h2 class="menu-title">🍹 Signature Holiday Cocktails</h2>
+                    <div class="menu-item featured">
+                        <div class="item-name">Winter Wonderland Martini <span class="featured-badge">FEATURED</span></div>
+                        <div class="item-description">Vanilla vodka, white chocolate liqueur, and cranberry with a sugared rim</div>
+                        <div class="item-price">$12</div>
+                    </div>
+                    <div class="menu-item featured">
+                        <div class="item-name">Spiced Pear Mule <span class="featured-badge">FEATURED</span></div>
+                        <div class="item-description">Pear vodka, ginger beer, cinnamon syrup, fresh lime</div>
+                        <div class="item-price">$11</div>
+                    </div>
+                </div>
+                
+                <div class="menu-section">
+                    <h2 class="menu-title">🍺 Beer & Wine</h2>
+                    <div class="menu-item">
+                        <div class="item-name">Local Craft Beer</div>
+                        <div class="item-description">Rotating selection from Denver breweries</div>
+                        <div class="item-price">$6-8</div>
+                    </div>
+                </div>
+            </section>
+            
+            <section id="sponsors" class="section">
+                <h2 style="text-align: center; margin-bottom: 20px; color: var(--primary-color);">Our Sponsors</h2>
+                <p style="text-align: center; margin-bottom: 30px; color: var(--dark-gray);">
+                    The Denver Winter Market isn't just an event, it's a celebration of local business, creativity, and community. None of it would be possible without the incredible support of our sponsors and partners who believe in the power of Main Street.
+                </p>
+                
+                <div class="social-grid" style="grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));">
+                    <a href="https://www.alpinelightingcompany.com/" target="_blank" class="social-card">
+                        <div class="social-icon">
+                            <img src="https://www.mainstreetevents.co/images/alpine-lighting-logo.png" alt="Alpine Lighting Company Logo" style="width: 40px; height: 40px; object-fit: contain;" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                            <span style="display: none; font-size: 40px;">💡</span>
+                        </div>
+                        <div class="social-name">Alpine Lighting Company</div>
+                        <div style="font-size: 12px; color: var(--secondary-color); margin-top: 5px;">Official Lighting Partner</div>
+                    </a>
+                    <a href="https://www.redrocksspirits.com/" target="_blank" class="social-card">
+                        <div class="social-icon">
+                            <img src="https://www.mainstreetevents.co/images/red-rocks-spirits-logo.png" alt="Red Rocks Spirits Logo" style="width: 40px; height: 40px; object-fit: contain;" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                            <span style="display: none; font-size: 40px;">🥃</span>
+                        </div>
+                        <div class="social-name">Red Rocks Spirits</div>
+                        <div style="font-size: 12px; color: var(--secondary-color); margin-top: 5px;">Official Vodka Partner</div>
+                    </a>
+                    <a href="https://dug.org/" target="_blank" class="social-card">
+                        <div class="social-icon">
+                            <img src="https://www.mainstreetevents.co/images/denver-urban-gardens-logo.png" alt="Denver Urban Gardens Logo" style="width: 40px; height: 40px; object-fit: contain;" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                            <span style="display: none; font-size: 40px;">🌱</span>
+                        </div>
+                        <div class="social-name">Denver Urban Gardens</div>
+                        <div style="font-size: 12px; color: var(--secondary-color); margin-top: 5px;">Community Partner</div>
+                    </a>
+                    <a href="https://www.4nosesbrewing.com/" target="_blank" class="social-card">
+                        <div class="social-icon">
+                            <img src="https://www.mainstreetevents.co/images/4-noses-brewing-logo.png" alt="4 Noses Brewing Logo" style="width: 40px; height: 40px; object-fit: contain;" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                            <span style="display: none; font-size: 40px;">🍺</span>
+                        </div>
+                        <div class="social-name">4 Noses Brewing</div>
+                        <div style="font-size: 12px; color: var(--secondary-color); margin-top: 5px;">Brewing Partner</div>
+                    </a>
+                </div>
+                
+                <div style="margin-top: 40px; padding: 20px; background: var(--light-gray); border-radius: var(--border-radius); text-align: center;">
+                    <h3 style="color: var(--primary-color); margin-bottom: 15px;">Interested in sponsoring?</h3>
+                    <p style="color: var(--secondary-color); margin-bottom: 15px; font-size: 14px;">
+                        Join our community of sponsors and help support local artisans and small businesses in Denver.
+                    </p>
+                    <a href="mailto:markets@mainstreetevents.co?subject=Sponsorship%20Inquiry" class="form-button" style="display: inline-block; text-decoration: none; width: auto; padding: 12px 24px;">
+                        Become a Sponsor
+                    </a>
+                </div>
+            </section>
+            
+            <section id="contact" class="section">
+                <div class="social-grid">
+                    <div class="social-card" onclick="showSection('contactform')" style="cursor: pointer;">
+                        <div class="social-icon">✉️</div>
+                        <div class="social-name">Contact us</div>
+                    </div>
+                    
+                    <a href="https://www.instagram.com/main.street.events/" target="_blank" class="social-card">
+                        <div class="social-icon">
+                            <svg width="40" height="40" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+                            </svg>
+                        </div>
+                        <div class="social-name">Follow us</div>
+                    </a>
+                    
+                    <a href="#" class="social-card" onclick="alert('Coming soon!')">
+                        <div class="social-icon">📮</div>
+                        <div class="social-name">Join the mailing list</div>
+                    </a>
+                    
+                    <a href="https://www.google.com/maps/place/Main+Street+Events/@39.7643042,-105.1850768,10z/data=!4m8!3m7!1s0x8ce4d8e736e06a5d:0xcabb186d4ceebb20!8m2!3d39.7642444!4d-104.8547524!9m1!1b1!16s%2Fg%2F11xp0lw6lh?entry=ttu&g_ep=EgoyMDI1MDkxNy4wIKXMDSoASAFQAw%3D%3D" target="_blank" class="social-card">
+                        <div class="social-icon">⭐</div>
+                        <div class="social-name">Leave a review</div>
+                    </a>
+                </div>
+            </section>
+            
+            <section id="about" class="section">
+                <div class="about-content">
+                    <div style="text-align: center; margin-bottom: 30px; font-style: italic; color: var(--secondary-color);">
+                        "Experience the magic of small business and the power of community, where people thrive, creativity shines, and every event feels like home."
+                    </div>
+                    
+                    <div class="about-section">
+                        <h2 class="about-title">Our Story</h2>
+                        <p class="about-text">
+                            Growing up in Small Town, Colorado, supporting local businesses wasn't just a trend, it was a way of life. My parents were both artists and entrepreneurs, so I saw firsthand how much heart and hard work goes into building something of your own. We relied on our community. Local markets, fairs, and events weren't just about shopping; they were about connection.
+                        </p>
+                        <p class="about-text">
+                            That sense of community and entrepreneurship is what inspired me to start Main Street Events. I want to create markets that bring people together in the same way, where local vendors can showcase their passion, shoppers can discover something unique, and the entire experience feels more like a celebration than just another shopping trip.
+                        </p>
+                        <p class="about-text">
+                            At Main Street Events, it's not just about what you buy, but the experience of finding it. We host markets in unique venues, showcasing incredible talent, serving craft drinks, and creating a fun and welcoming atmosphere. Our goal is to make sure every vendor has the opportunity to grow and every guest leaves with something special, whether it's a handcrafted piece, a great memory, or a new favorite brand to follow.
+                        </p>
+                    </div>
+                    
+                    <div class="mission-card">
+                        <h3 style="color: var(--primary-color); margin-bottom: 15px;">Our Mission</h3>
+                        <p>At Main Street Events, our mission is to create vibrant, high-energy markets that bring together local businesses, artisans, and the community. We believe shopping local should be an experience, not just a transaction—where vendors thrive, shoppers discover something unique, and every event is centered around connection.</p>
+                    </div>
+                    
+                    <div class="mission-card">
+                        <h3 style="color: var(--primary-color); margin-bottom: 15px;">Our Goal</h3>
+                        <p>Our goal is to elevate the vendor market experience by hosting well-organized, well-promoted, and unforgettable events. We strive to provide small businesses with the best possible platform to grow while ensuring shoppers enjoy an exciting, one-of-a-kind market. From unique venues to intentionally selected vendors, we're committed to making every Main Street Event one that people look forward to and remember.</p>
+                    </div>
+                </div>
+            </section>
+            
+            <section id="contactform" class="section">
+                <h2 style="text-align: center; margin-bottom: 30px; color: var(--primary-color);">Contact us</h2>
+                
+                <form onsubmit="submitContactForm(event)">
+                    <div class="form-group">
+                        <label class="form-label">Name</label>
+                        <input type="text" class="form-input" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Email</label>
+                        <input type="email" class="form-input" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Phone Number</label>
+                        <input type="tel" class="form-input">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Subject</label>
+                        <select class="form-input" required>
+                            <option value="">Select a topic</option>
+                            <option value="vendor">Vendor Inquiry</option>
+                            <option value="sponsorship">Sponsorship</option>
+                            <option value="general">General Question</option>
+                            <option value="feedback">Feedback</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Message</label>
+                        <textarea class="form-textarea" rows="5" placeholder="What's on your mind?" required></textarea>
+                    </div>
+                    
+                    <button type="submit" class="form-button">Send Message</button>
+                </form>
+                
+                <div style="margin-top: 30px; padding: 20px; background: var(--light-gray); border-radius: var(--border-radius); text-align: center;">
+                    <p style="color: var(--secondary-color); font-size: 14px; margin-bottom: 15px;">
+                        You can also reach us directly at:
+                    </p>
+                    <p style="color: var(--primary-color); font-weight: bold;">
+                        markets@mainstreetevents.co
+                    </p>
+                    <p style="color: var(--primary-color); font-weight: bold; margin-top: 5px;">
+                        (303) 578-8452
+                    </p>
+                </div>
+                
+                <div style="text-align: center; margin-top: 20px;">
+                    <button class="back-button" onclick="showSection('contact')">← Back to Connect</button>
+                </div>
+            </section>
+            
+            <section id="thankyou" class="section">
+                <div class="thank-you-content">
+                    <div class="thank-you-icon">🙏</div>
+                    <h2 class="thank-you-title">Thank You!</h2>
+                    <p class="thank-you-message">Your message has been received. We appreciate you taking the time to connect with us!</p>
+                    <button class="back-button" onclick="showSection('vendors')">Continue Exploring</button>
+                </div>
+            </section>
+        </main>
+    </div>
+    
+    <script>
+        var vendors = [
+            {name: "Artisan Adornments", category: "jewelry & accessories", description: "Unique jewelry pieces", booth: "203", dates: ["dec5-7","dec12-14"]},
+            {name: "Artisan Bakery", category: "food & beverage", description: "Fresh baked goods", booth: "119", dates: ["dec5-7","dec12-14"]},
+            {name: "Artisan Collective", category: "art & gifts", description: "Multi-artist collective works", booth: "308", dates: ["dec5-7","dec12-14"]},
+            {name: "Bjorn's Honey", category: "food & beverage", description: "Local Colorado honey", booth: "123", dates: ["dec5-7","dec12-14"]},
+            {name: "Bluestem Bison Ranch", category: "food & beverage", description: "Premium bison meat products", booth: "TBD", dates: ["dec5-7","dec12-14"]},
+            {name: "Cappadocia Turkish Towels", category: "art & gifts", description: "Turkish towels and home textiles", booth: "111", dates: ["dec5-7","dec12-14"]},
+            {name: "Colorado Candle Co", category: "bath & body", description: "Soy candles and wax melts", booth: "107", dates: ["dec5-7","dec12-14"]},
+            {name: "Colorado Canvas", category: "art & gifts", description: "Canvas art and paintings", booth: "315", dates: ["dec5-7","dec12-14"]},
+            {name: "Colorado Collections", category: "jewelry & accessories", description: "Curated jewelry sets", booth: "215", dates: ["dec5-7","dec12-14"]},
+            {name: "Colorado Craft Co", category: "art & gifts", description: "Local handmade crafts", booth: "306", dates: ["dec5-7","dec12-14"]},
+            {name: "Colorado Craft Home", category: "home decor", description: "Artisan home goods", booth: "143", dates: ["dec5-7","dec12-14"]},
+            {name: "Colorado Craft Jewelry", category: "jewelry & accessories", description: "Artisan jewelry collective", booth: "221", dates: ["dec5-7","dec12-14"]},
+            {name: "Colorado Craft Kitchen", category: "food & beverage", description: "Handmade food products", booth: "134", dates: ["dec5-7","dec12-14"]},
+            {name: "Colorado Creamery", category: "food & beverage", description: "Artisan dairy products", booth: "125", dates: ["dec5-7","dec12-14"]},
+            {name: "Colorado Crystals", category: "jewelry & accessories", description: "Crystal and stone jewelry", booth: "209", dates: ["dec5-7","dec12-14"]},
+            {name: "Colorado Cuisine", category: "food & beverage", description: "Regional food specialties", booth: "117", dates: ["dec5-7","dec12-14"]},
+            {name: "Colorado Gems", category: "jewelry & accessories", description: "Local gemstone jewelry", booth: "202", dates: ["dec5-7","dec12-14"]},
+            {name: "Colorado Gold", category: "jewelry & accessories", description: "Gold jewelry and accessories", booth: "225", dates: ["dec5-7","dec12-14"]},
+            {name: "Colorado Home Design", category: "home decor", description: "Rustic home furnishings", booth: "138", dates: ["dec5-7","dec12-14"]},
+            {name: "Concrete Poppy Design", category: "bath & body", description: "Natural beauty products", booth: "312", dates: ["dec5-7","dec12-14"]},
+            {name: "Copper Creek Crafts", category: "jewelry & accessories", description: "Copper jewelry and accessories", booth: "206", dates: ["dec5-7","dec12-14"]},
+            {name: "Copper State Crafts", category: "art & gifts", description: "Metalwork and sculptures", booth: "311", dates: ["dec5-7","dec12-14"]},
+            {name: "Copper State Jewelry", category: "jewelry & accessories", description: "Southwestern style jewelry", booth: "224", dates: ["dec5-7","dec12-14"]},
+            {name: "Creative Corner", category: "art & gifts", description: "Mixed media creations", booth: "317", dates: ["dec5-7","dec12-14"]},
+            {name: "Denver Bath Works", category: "bath & body", description: "Luxury bath bombs and salts", booth: "106", dates: ["dec5-7","dec12-14"]},
+            {name: "Denver Dazzle", category: "jewelry & accessories", description: "Sparkling jewelry pieces", booth: "223", dates: ["dec5-7","dec12-14"]},
+            {name: "Denver Delights", category: "food & beverage", description: "Local food products", booth: "124", dates: ["dec5-7","dec12-14"]},
+            {name: "Denver Design House", category: "home decor", description: "Modern home accessories", booth: "140", dates: ["dec5-7","dec12-14"]},
+            {name: "Denver Design Studio", category: "art & gifts", description: "Modern design pieces", booth: "314", dates: ["dec5-7","dec12-14"]},
+            {name: "Denver Designs", category: "jewelry & accessories", description: "Contemporary jewelry", booth: "212", dates: ["dec5-7","dec12-14"]},
+            {name: "Denver Distillery", category: "food & beverage", description: "Artisan spirits", booth: "113", dates: ["dec5-7","dec12-14"]},
+            {name: "Denver Jewelers", category: "jewelry & accessories", description: "Custom jewelry design", booth: "205", dates: ["dec5-7","dec12-14"]},
+            {name: "Denver Living", category: "home decor", description: "Urban home accessories", booth: "146", dates: ["dec5-7","dec12-14"]},
+            {name: "Dolan Geiman", category: "art & gifts", description: "Mixed media artwork", booth: "114,115", dates: ["dec5-7","dec12-14"]},
+            {name: "Ear bobs DC", category: "clothing", description: "Fashion accessories", booth: "TBD", dates: ["dec5-7","dec12-14"]},
+            {name: "Front Range Fashion", category: "jewelry & accessories", description: "Fashion jewelry and accessories", booth: "208", dates: ["dec5-7","dec12-14"]},
+            {name: "Front Range Fine Art", category: "art & gifts", description: "Original paintings and prints", booth: "313", dates: ["dec5-7","dec12-14"]},
+            {name: "Front Range Finds", category: "jewelry & accessories", description: "Vintage and antique jewelry", booth: "220", dates: ["dec5-7","dec12-14"]},
+            {name: "Front Range Flavors", category: "food & beverage", description: "Specialty seasonings", booth: "127", dates: ["dec5-7","dec12-14"]},
+            {name: "Front Range Foods", category: "food & beverage", description: "Local specialty foods", booth: "116", dates: ["dec5-7","dec12-14"]},
+            {name: "Front Range Furnishings", category: "home decor", description: "Handcrafted furniture", booth: "142", dates: ["dec5-7","dec12-14"]},
+            {name: "Front Range Jewelry Co", category: "jewelry & accessories", description: "Local jewelry makers", booth: "227", dates: ["dec5-7","dec12-14"]},
+            {name: "Handmade Haven", category: "art & gifts", description: "Artisan handmade goods", booth: "316", dates: ["dec5-7","dec12-14"]},
+            {name: "Handmade Heritage", category: "jewelry & accessories", description: "Traditional jewelry crafts", booth: "213", dates: ["dec5-7","dec12-14"]},
+            {name: "KB Candies", category: "food & beverage", description: "Handmade chocolates and confections", booth: "216,217", dates: ["dec5-7","dec12-14"]},
+            {name: "Lori The Dip Lady/Gourmet Farms of Colorado", category: "food & beverage", description: "Gourmet dips and sauces", booth: "136", dates: ["dec5-7","dec12-14"]},
+            {name: "Matty Miller Studio", category: "art & gifts", description: "Original artwork and prints", booth: "133", dates: ["dec5-7","dec12-14"]},
+            {name: "MEC Vintage Posters", category: "art & gifts", description: "Vintage poster art and prints", booth: "130", dates: ["dec5-7","dec12-14"]},
+            {name: "Mile High Makers", category: "art & gifts", description: "Denver artist creations", booth: "309", dates: ["dec5-7","dec12-14"]},
+            {name: "Mile High Marinades", category: "food & beverage", description: "Gourmet marinades and sauces", booth: "118", dates: ["dec5-7","dec12-14"]},
+            {name: "Miso Heat", category: "food & beverage", description: "Artisan hot sauces and spices", booth: "108", dates: ["dec5-7","dec12-14"]},
+            {name: "Modern Heirloom", category: "art & gifts", description: "Contemporary heirloom pieces", booth: "218", dates: ["dec5-7","dec12-14"]},
+            {name: "Mountain Brew Co", category: "food & beverage", description: "Craft beer and beverages", booth: "112", dates: ["dec5-7","dec12-14"]},
+            {name: "Mountain Charm Co", category: "jewelry & accessories", description: "Charm bracelets and necklaces", booth: "211", dates: ["dec5-7","dec12-14"]},
+            {name: "Mountain Lodge Decor", category: "home decor", description: "Lodge-style decorations", booth: "139", dates: ["dec5-7","dec12-14"]},
+            {name: "Mountain Maiden Jewelry", category: "jewelry & accessories", description: "Feminine jewelry designs", booth: "218", dates: ["dec5-7","dec12-14"]},
+            {name: "Mountain Metals", category: "jewelry & accessories", description: "Metalwork jewelry", booth: "204", dates: ["dec5-7","dec12-14"]},
+            {name: "Mountain Peak Jewelry", category: "jewelry & accessories", description: "Nature-inspired jewelry", booth: "222", dates: ["dec5-7","dec12-14"]},
+            {name: "Mountain Peak Provisions", category: "food & beverage", description: "Gourmet food items", booth: "128", dates: ["dec5-7","dec12-14"]},
+            {name: "Mountain Style Co", category: "clothing", description: "Outdoor lifestyle clothing", booth: "137", dates: ["dec5-7","dec12-14"]},
+            {name: "Mountain Time Soap & Supply", category: "bath & body", description: "Natural soaps and skincare", booth: "104", dates: ["dec5-7","dec12-14"]},
+            {name: "Mountain Treats", category: "food & beverage", description: "Specialty confections", booth: "121", dates: ["dec5-7","dec12-14"]},
+            {name: "Mountain View Decor", category: "home decor", description: "Scenic home decorations", booth: "144", dates: ["dec5-7","dec12-14"]},
+            {name: "Mountain View Prints", category: "art & gifts", description: "Colorado landscape photography", booth: "307", dates: ["dec5-7","dec12-14"]},
+            {name: "Mr Cristmas", category: "art & gifts", description: "Holiday decorations and gifts", booth: "120", dates: ["dec5-7","dec12-14"]},
+            {name: "Out of the Blue", category: "clothing", description: "Unique clothing and accessories", booth: "129", dates: ["dec5-7","dec12-14"]},
+            {name: "Pawsome Pets Colorado", category: "pets", description: "Pet accessories and treats", booth: "301", dates: ["dec5-7","dec12-14"]},
+            {name: "Pedal Stoke", category: "art & gifts", description: "Cycling-inspired art and gifts", booth: "304", dates: ["dec5-7","dec12-14"]},
+            {name: "Product127", category: "art & gifts", description: "Unique artisan goods", booth: "122", dates: ["dec5-7","dec12-14"]},
+            {name: "Pure Bliss Botanicals", category: "bath & body", description: "Organic skincare line", booth: "105", dates: ["dec5-7","dec12-14"]},
+            {name: "Rocky Mountain Arts", category: "art & gifts", description: "Regional art and crafts", booth: "310", dates: ["dec5-7","dec12-14"]},
+            {name: "Rocky Mountain Beads", category: "jewelry & accessories", description: "Beaded jewelry and crafts", booth: "226", dates: ["dec5-7","dec12-14"]},
+            {name: "Rocky Mountain Coffee", category: "food & beverage", description: "Small-batch roasted coffee", booth: "110", dates: ["dec5-7","dec12-14"]},
+            {name: "Rocky Mountain Rings", category: "jewelry & accessories", description: "Wedding and engagement rings", booth: "207", dates: ["dec5-7","dec12-14"]},
+            {name: "Rocky Mountain Roasters", category: "food & beverage", description: "Premium coffee beans", booth: "126", dates: ["dec5-7","dec12-14"]},
+            {name: "Rocky Mountain Rustic", category: "home decor", description: "Western-style decor", booth: "145", dates: ["dec5-7","dec12-14"]},
+            {name: "Rocky Road Accessories", category: "jewelry & accessories", description: "Western-style accessories", booth: "219", dates: ["dec5-7","dec12-14"]},
+            {name: "Rustic Revival", category: "home decor", description: "Reclaimed wood furniture", booth: "141", dates: ["dec5-7","dec12-14"]},
+            {name: "Schwegmann Studios", category: "art & gifts", description: "Photography and art", booth: "303", dates: ["dec5-7","dec12-14"]},
+            {name: "Shoreline Spirit", category: "clothing", description: "Coastal-inspired apparel", booth: "329", dates: ["dec5-7","dec12-14"]},
+            {name: "Silver Mountain Jewelry", category: "jewelry & accessories", description: "Handcrafted silver jewelry", booth: "201", dates: ["dec5-7","dec12-14"]},
+            {name: "Silver State Jewelry", category: "jewelry & accessories", description: "Sterling silver creations", booth: "214", dates: ["dec5-7","dec12-14"]},
+            {name: "So Very Lovely", category: "art & gifts", description: "Handmade gifts and decor", booth: "132", dates: ["dec5-7","dec12-14"]},
+            {name: "Spell & Sage", category: "art & gifts", description: "Mystical and spiritual gifts", booth: "322", dates: ["dec5-7","dec12-14"]},
+            {name: "Spinster Sisters Co", category: "bath & body", description: "Handcrafted bath products", booth: "135", dates: ["dec5-7","dec12-14"]},
+            {name: "The Spice Guy", category: "food & beverage", description: "Specialty spices and seasonings", booth: "131", dates: ["dec5-7","dec12-14"]},
+            {name: "Two Little Fruits", category: "art & gifts", description: "Artisan crafts and gifts", booth: "210", dates: ["dec5-7","dec12-14"]},
+            {name: "What the Fudge Co.", category: "food & beverage", description: "Gourmet fudge varieties", booth: "109", dates: ["dec5-7","dec12-14"]},
+            {name: "Whimsy & Wonder", category: "art & gifts", description: "Whimsical art and curiosities", booth: "305", dates: ["dec5-7","dec12-14"]},
+            {name: "Wild Wax Candle Company", category: "bath & body", description: "Hand-poured candles", booth: "321", dates: ["dec5-7","dec12-14"]},
+            {name: "Woodland Wonders", category: "home decor", description: "Nature-inspired decor", booth: "147", dates: ["dec5-7","dec12-14"]}
+        ];
+        
+        var vendorFilter = 'all';
+        var dateFilter = 'all';
+        var currentSelectedBooth = null;
+        
+        function showSection(sectionName) {
+            var tabs = document.querySelectorAll('.nav-tab');
+            var sections = document.querySelectorAll('.section');
+            
+            for (var i = 0; i < tabs.length; i++) {
+                tabs[i].classList.remove('active');
+            }
+            for (var i = 0; i < sections.length; i++) {
+                sections[i].classList.remove('active');
+            }
+            
+            event.target.classList.add('active');
+            document.getElementById(sectionName).classList.add('active');
+        }
+        
+        function toggleView(viewType) {
+            var buttons = document.querySelectorAll('.view-toggle-btn');
+            var listView = document.getElementById('listView');
+            var mapView = document.getElementById('mapView');
+            
+            for (var i = 0; i < buttons.length; i++) {
+                buttons[i].classList.remove('active');
+            }
+            event.target.classList.add('active');
+            
+            if (viewType === 'list') {
+                listView.classList.add('active');
+                mapView.classList.remove('active');
+            } else {
+                mapView.classList.add('active');
+                listView.classList.remove('active');
+            }
+        }
+        
+        function setDateFilter(date) {
+            dateFilter = date;
+            renderVendors();
+        }
+        
+        function setCategoryFilter(category) {
+            vendorFilter = category;
+            renderVendors();
+        }
+        
+        function getFilteredVendors() {
+            var searchTerm = document.getElementById('vendorSearch').value.toLowerCase();
+            var filteredVendors = [];
+            
+            for (var i = 0; i < vendors.length; i++) {
+                var vendor = vendors[i];
+                var matchesSearch = searchTerm === '' || 
+                    vendor.name.toLowerCase().indexOf(searchTerm) >= 0 ||
+                    vendor.description.toLowerCase().indexOf(searchTerm) >= 0 ||
+                    vendor.category.toLowerCase().indexOf(searchTerm) >= 0;
+                var matchesCategory = vendorFilter === 'all' || vendor.category === vendorFilter;
+                var matchesDate = dateFilter === 'all' || vendor.dates.indexOf(dateFilter) >= 0;
+                
+                if (matchesSearch && matchesCategory && matchesDate) {
+                    filteredVendors.push(vendor);
+                }
+            }
+            
+            return filteredVendors;
+        }
+        
+        function updateSearchResultsInfo() {
+            var searchTerm = document.getElementById('vendorSearch').value.toLowerCase();
+            var filteredVendors = getFilteredVendors();
+            var infoElement = document.getElementById('searchResultsInfo');
+            
+            if (searchTerm || dateFilter !== 'all' || vendorFilter !== 'all') {
+                var filterTexts = [];
+                if (searchTerm) filterTexts.push('searching for "' + searchTerm + '"');
+                if (dateFilter !== 'all') {
+                    var dateText = dateFilter === 'dec5-7' ? 'Dec 5-7' : 'Dec 12-14';
+                    filterTexts.push('date: ' + dateText);
+                }
+                if (vendorFilter !== 'all') filterTexts.push('category: ' + vendorFilter);
+                
+                infoElement.innerHTML = 'Showing ' + filteredVendors.length + ' vendors (' + filterTexts.join(', ') + ')';
+                infoElement.style.display = 'block';
+            } else {
+                infoElement.innerHTML = 'Showing all ' + filteredVendors.length + ' vendors';
+                infoElement.style.display = 'block';
+            }
+        }
+        
+        function renderVendors() {
+            var filteredVendors = getFilteredVendors();
+            var grid = document.getElementById('vendorGrid');
+            var html = '';
+            
+            updateSearchResultsInfo();
+            
+            for (var i = 0; i < filteredVendors.length; i++) {
+                var vendor = filteredVendors[i];
+                var dateText = '';
+                if (vendor.dates.length === 1) {
+                    if (vendor.dates[0] === 'dec5-7') {
+                        dateText = ' (Dec 5-7 only)';
+                    } else if (vendor.dates[0] === 'dec12-14') {
+                        dateText = ' (Dec 12-14 only)';
+                    }
+                }
+                
+                // Add letter anchor for alphabetical jumping
+                var firstLetter = vendor.name.charAt(0).toUpperCase();
+                var letterAnchor = '';
+                
+                // Check if this is the first vendor starting with this letter
+                if (i === 0 || filteredVendors[i-1].name.charAt(0).toUpperCase() !== firstLetter) {
+                    letterAnchor = '<div id="letter-' + firstLetter + '" style="scroll-margin-top: 100px;"></div>';
+                }
+                
+                html += letterAnchor;
+                html += '<div class="vendor-card" onclick="showVendorOnMap(\'' + vendor.booth + '\')">';
+                html += '<div class="vendor-name">' + vendor.name + '</div>';
+                html += '<div class="vendor-category">' + vendor.category + '</div>';
+                html += '<div class="vendor-description">' + vendor.description + '</div>';
+                html += '<div class="vendor-booth">📍 Booth ' + vendor.booth + dateText + '</div>';
+                html += '</div>';
+            }
+            
+            if (filteredVendors.length === 0) {
+                html = '<div style="text-align: center; padding: 40px; color: var(--dark-gray);">No vendors found matching your search criteria.</div>';
+            }
+            
+            grid.innerHTML = html;
+            updateAlphabetButtons();
+        }
+        
+        function jumpToLetter(letter) {
+            var element = document.getElementById('letter-' + letter);
+            if (element) {
+                element.scrollIntoView({ 
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            }
+        }
+        
+        function updateAlphabetButtons() {
+            // Get all letters that have vendors
+            var availableLetters = [];
+            var filteredVendors = getFilteredVendors();
+            
+            for (var i = 0; i < filteredVendors.length; i++) {
+                var firstLetter = filteredVendors[i].name.charAt(0).toUpperCase();
+                if (availableLetters.indexOf(firstLetter) === -1) {
+                    availableLetters.push(firstLetter);
+                }
+            }
+            
+            // Update link states
+            var links = document.querySelectorAll('.alphabet-link');
+            for (var i = 0; i < links.length; i++) {
+                var link = links[i];
+                var letter = link.textContent;
+                
+                if (availableLetters.indexOf(letter) >= 0) {
+                    link.classList.remove('disabled');
+                    link.style.pointerEvents = 'auto';
+                } else {
+                    link.classList.add('disabled');
+                    link.style.pointerEvents = 'none';
+                }
+            }
+        }
+        
+        function showFloor(floorNumber) {
+            var buttons = document.querySelectorAll('.floor-btn');
+            var maps = document.querySelectorAll('.floor-map');
+            
+            for (var i = 0; i < buttons.length; i++) {
+                buttons[i].classList.remove('active');
+            }
+            for (var i = 0; i < maps.length; i++) {
+                maps[i].classList.remove('active');
+            }
+            
+            event.target.classList.add('active');
+            document.getElementById('floor' + floorNumber).classList.add('active');
+        }
+        
+        function clearBoothHighlights() {
+            var booths = document.querySelectorAll('.booth');
+            for (var i = 0; i < booths.length; i++) {
+                booths[i].classList.remove('highlighted');
+            }
+        }
+        
+        function highlightBooth(boothNumber) {
+            clearBoothHighlights();
+            var booths = document.querySelectorAll('[data-booth="' + boothNumber + '"]');
+            for (var i = 0; i < booths.length; i++) {
+                booths[i].classList.add('highlighted');
+            }
+        }
+        
+        function findVendorByBooth(boothNumber) {
+            for (var i = 0; i < vendors.length; i++) {
+                if (vendors[i].booth === boothNumber || vendors[i].booth.indexOf(boothNumber) >= 0) {
+                    return vendors[i];
+                }
+            }
+            return null;
+        }
+        
+        function showBoothInfo(boothNumber, level) {
+            currentSelectedBooth = boothNumber;
+            highlightBooth(boothNumber);
+            
+            var vendor = findVendorByBooth(boothNumber);
+            var boothInfoElement = document.getElementById('boothInfo');
+            
+            if (vendor) {
+                var dateText = '';
+                if (vendor.dates.length === 1) {
+                    if (vendor.dates[0] === 'dec5-7') {
+                        dateText = 'Available Dec 5-7 only';
+                    } else if (vendor.dates[0] === 'dec12-14') {
+                        dateText = 'Available Dec 12-14 only';
+                    }
+                } else {
+                    dateText = 'Available both weekends';
+                }
+                
+                boothInfoElement.innerHTML = 
+                    '<div class="booth-number">Booth ' + boothNumber + '</div>' +
+                    '<div class="vendor-info-name">' + vendor.name + '</div>' +
+                    '<div class="vendor-info-category">' + vendor.category + '</div>' +
+                    '<div class="vendor-info-description">' + vendor.description + '</div>' +
+                    '<div class="vendor-dates">📅 ' + dateText + '</div>';
+                
+                boothInfoElement.classList.add('selected');
+            } else {
+                boothInfoElement.innerHTML = 
+                    '<div class="booth-number">Booth ' + boothNumber + '</div>' +
+                    '<div style="color: var(--dark-gray); margin-top: 10px;">No vendor assigned</div>';
+                
+                boothInfoElement.classList.remove('selected');
+            }
+        }
+        
+        function showVendorOnMap(boothNumber) {
+            // Handle multiple booths (e.g., "114,115" or "216,217")
+            var firstBooth = boothNumber.split(',')[0];
+            
+            // Switch to map view
+            var listView = document.getElementById('listView');
+            var mapView = document.getElementById('mapView');
+            var buttons = document.querySelectorAll('.view-toggle-btn');
+            
+            // Update toggle buttons
+            buttons[0].classList.remove('active'); // List button
+            buttons[1].classList.add('active'); // Map button
+            
+            // Switch views
+            listView.classList.remove('active');
+            mapView.classList.add('active');
+            
+            // Determine which floor the booth is on
+            if (firstBooth.startsWith('1')) {
+                showFloorForBooth('1');
+            } else if (firstBooth.startsWith('2') || firstBooth.startsWith('3')) {
+                showFloorForBooth('2');
+            }
+            
+            // Show booth info
+            showBoothInfo(firstBooth, 'Level ' + (firstBooth.startsWith('1') ? '1' : '2'));
+        }
+        
+        function showFloorForBooth(floorNumber) {
+            var buttons = document.querySelectorAll('.floor-btn');
+            var maps = document.querySelectorAll('.floor-map');
+            
+            for (var i = 0; i < buttons.length; i++) {
+                buttons[i].classList.remove('active');
+            }
+            for (var i = 0; i < maps.length; i++) {
+                maps[i].classList.remove('active');
+            }
+            
+            // Activate the correct floor
+            if (floorNumber === '1') {
+                buttons[0].classList.add('active');
+            } else {
+                buttons[1].classList.add('active');
+            }
+            document.getElementById('floor' + floorNumber).classList.add('active');
+        }
+        
+        function submitForm(event) {
+            event.preventDefault();
+            showSection('thankyou');
+        }
+        
+        function submitContactForm(event) {
+            event.preventDefault();
+            showSection('thankyou');
+        }
+        
+        // Initialize the app
+        document.addEventListener('DOMContentLoaded', function() {
+            renderVendors();
+        });
+        
+        // Initialize immediately for inline script
+        renderVendors();
+    </script>
+</body>
+</html>
